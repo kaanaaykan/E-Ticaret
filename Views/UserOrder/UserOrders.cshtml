@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Order>
+@{
+}
+
+<div style="width:100%" class="mt-3">
+    <a href="/Identity/Account/Manage" class="btn btn-primary my-2">Geri</a>
+    <h3>Siparişlerim</h3>
+    @if (Model != null && Model.Count() > 0)
+    {
+        <table class="table table-striped">
+            <tr>
+                <th>Sipariş Tarihi</th>
+                <th>Sipariş Durumu</th>
+            </tr>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderDate.ToString("dd-MM-yyyy")</td>
+                    <td>@order.OrderStatus.StatusName</td>
+
+
+                </tr>
+                @if (order.OrderDetails != null && order.OrderDetails.Count > 0)
+                {
+                    <tr>
+                        <td>
+                            <table class="table table-striped">
+                                <tr>
+                                    <td>
+                                        Toplam:
+                                    </td>
+                                    <td>
+                                        @(order.OrderDetails.Select(item => item.Product.Price * item.Quantity).Sum()) TL
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Urun</th>
+                                    <th>Resim</th>
+                                    <th>Kategori</th>
+                                    <th>Birim Fiyat</th>
+                                    <th>Toplam Fiyat</th>
+                                </tr>
+                                @foreach (var item in order.OrderDetails)
+                                {
+                                    <tr>
+                                        <td>@item.Product.ProductName</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.Product.Image))
+                                            {
+                                                <img src="/images/@item.Product.Image" style="width: 80px; height: 100px;" />
+                                            }
+                                            else
+                                            {
+                                                <img src="/images/resim-yok.png" style="width: 80px; height: 100px;" />
+
+                                            }
+                                        </td>
+                                        <td>@item.Product.Category.CategoryName</td>
+                                        <td>@String.Format("{0} TL X {1}", item.Product.Price, item.Quantity)</td>
+                                        <td>@($"{item.Product.Price * item.Quantity} TL")</td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    }
+    else
+    {
+        <h3>Sipariş Yok</h3>
+    }
+</div>

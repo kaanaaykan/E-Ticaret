@@ -1,0 +1,57 @@
+﻿@model ShopingCart
+@{
+    ViewData["Title"] = "KullaniciSepet";
+}
+
+<div style="width:90%; margin:auto" class="mt-3">
+    @if (Model != null && Model.CartDetails != null && Model.CartDetails.Count > 0)
+    {
+        <h3>Sepetim</h3>
+
+        <table class="table table-striped">
+            <tr>
+                <th>Urun</th>
+                <th>Resim</th>
+                <th>Kategori</th>
+                <th>Birim Fiyat</th>
+                <th>Toplam Fiyat</th>
+                <th>Ekle/Çıkar</th>
+            </tr>
+            @foreach (var item in Model.CartDetails)
+            {
+                <tr>
+                    <td>@item.Product.ProductName</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Product.Image))
+                        {
+                            <img src="/images/@item.Product.Image" style="width: 80px; height: 100px;" />
+                        }
+                        else
+                        {
+                            <img src="/images/resim-yok.png" style="width: 80px; height: 100px;" />
+
+                        }
+                    </td>
+                    <td>@item.Product.Category.CategoryName</td>
+                    <td>@String.Format("{0} TL X {1}", item.Product.Price, item.Quantity)</td>
+                    <td>@($"{item.Product.Price * item.Quantity} TL")</td>
+                    <td>
+                        <a class="btn btn-info" href="/Cart/AddProduct?productId=@item.ProductId&redirect=1">+</a>
+                        <a class="btn btn-info" href="/Cart/DeleteProduct?productId=@item.ProductId">-</a>
+                    </td>
+                </tr>
+            }
+        </table>
+        <div class="my-2">
+            <h5>Toplam:  @(Model.CartDetails.Select(item => item.Product.Price * item.Quantity).Sum()) TL</h5>
+        </div>
+
+        <div class="my-2">
+            <a class="btn btn-primary" href="/Cart/Purchase">Satın Al</a>
+        </div>
+    }
+    else
+    {
+        <h3>Sepet Boş</h3>
+    }
+</div>
